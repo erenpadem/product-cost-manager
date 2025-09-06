@@ -17,7 +17,7 @@ class RawMaterialForm
                     ->required()
                     ->placeholder('Ham maddenin adını girin'),
 
-                TextInput::make('price_per_kg')
+                TextInput::make('price')
                     ->label('Birim Fiyat')         // Türkçe label
                     ->required()
                     ->numeric()

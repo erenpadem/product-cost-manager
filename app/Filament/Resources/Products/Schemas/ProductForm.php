@@ -12,6 +12,7 @@ use App\Models\RawMaterial;
 use App\Models\Product;
 use App\Services\ProductService;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
 class ProductForm
@@ -41,14 +42,27 @@ class ProductForm
                     ->required()
                     ->placeholder('Ürünün adını girin'),
                 Select::make('type')
-                        ->label('Ürün Türü')
-                        ->options([
-                            'semi' => 'Yarı Ürün',
-                            'final' => 'Final Ürün',
-                        ])
-                        ->default('final')
-                        ->required(),
+                    ->label('Ürün Türü')
+                    ->options([
+                        'semi' => 'Yarı Ürün',
+                        'final' => 'Final Ürün',
+                    ])
+                    ->default('final')
+                    ->required(),
             ])->columnSpanFull(),
+                            
+         RichEditor::make('notes')
+           ->label('Ürün Notları')
+           
+                 ->toolbarButtons([
+                      ['bold', 'italic', 'underline', 'strike', 'subscript', 'superscript', 'link'],
+                   ['h2', 'h3', 'alignStart', 'alignCenter', 'alignEnd'],
+               ['blockquote', 'codeBlock', 'bulletList', 'orderedList'],
+                     ['table', 'attachFiles'], // The `customBlocks` and `mergeTags` tools are also added here if those features are used.
+                  ['undo', 'redo'],
+                 ])->columnSpanFull(),
+         
+                                        
 
             Section::make('Tarif / Ham Maddeler')->schema([
                 Repeater::make('ingredients')

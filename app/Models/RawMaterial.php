@@ -11,7 +11,7 @@ class RawMaterial extends Model
 
     protected $fillable = [
         'name',
-        'price_per_kg',
+        'price',
         'unit', // kg, g, ml, l, kw
     ];
 
@@ -30,11 +30,11 @@ class RawMaterial extends Model
     public function calculateCost(float $amount): float
     {
         return match ($this->unit) {
-            'kg' => ($this->price_per_kg / 1000) * $amount,
-            'g' => $this->price_per_kg * $amount,
-            'l' => ($this->price_per_kg / 1000) * $amount,
-            'ml' => $this->price_per_kg * $amount,
-            'kw' => $this->price_per_kg * $amount,
+            'kg' => ($this->price / 1000) * $amount,
+            'g' => $this->price * $amount,
+            'l' => ($this->price / 1000) * $amount,
+            'ml' => $this->price * $amount,
+            'kw' => $this->price * $amount,
             default => 0,
         };
     }

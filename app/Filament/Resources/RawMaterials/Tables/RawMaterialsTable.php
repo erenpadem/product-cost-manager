@@ -17,7 +17,7 @@ class RawMaterialsTable
                 TextColumn::make('name')
                     ->label('Ham Madde Adı') // Türkçe label
                     ->searchable(),
-                TextColumn::make('price_per_kg')
+                TextColumn::make('price')
                     ->label('Birim Fiyat') // Türkçe label
                     ->money('TRY', true)   // Türk Lirası olarak göster
                     ->sortable(),

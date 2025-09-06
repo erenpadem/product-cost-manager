@@ -45,7 +45,7 @@ class ProductService
 
             if ($type === 'raw') {
                 $raw = RawMaterial::find($itemId);
-                if ($raw) $costPerGram = $raw->price_per_kg / 1000;
+                if ($raw) $costPerGram = $raw->price / 1000;
             } elseif ($type === 'product') {
                 $product = Product::find($itemId);
                 if ($product && $product->total_grams > 0) {

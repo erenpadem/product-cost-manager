@@ -21,6 +21,7 @@ class Product extends Model implements HasMedia
         'cost',
         'type',
         'image',
+        'notes',
     ];
 
     public function recipeItems()

@@ -24,8 +24,8 @@ class ProductsTable
         return $table
             ->columns([
                 SpatieMediaLibraryImageColumn::make(name: 'product')
-                ->label('Görsel')
-                ->collection('products'),
+                    ->label('Görsel')
+                    ->collection('products'),
                 TextColumn::make('name')
                     ->label('Ürün Adı')
                     ->searchable()
@@ -43,6 +43,13 @@ class ProductsTable
                     ->money('TRY')
                     ->sortable()
                     ->toggleable(),
+
+  
+                TextColumn::make('cost_per_kg')
+                    ->label('Kilo Başına Maliyet')
+                    ->getStateUsing(fn($record) => $record->total_grams ? $record->cost / ($record->total_grams / 1000) : 0)
+                    ->money('TRY')
+                    ->sortable(),
 
                 TextColumn::make('type')
                     ->label('Ürün Türü')
@@ -89,11 +96,13 @@ class ProductsTable
                         TextInput::make('min')
                             ->label('Minimum Fiyat')
                             ->numeric()
-                            ->reactive(), // Livewire ile anlık güncelleme
+                            ->minValue(0) // 0'ın altını engelle
+                            ->reactive(),
 
                         TextInput::make('max')
                             ->label('Maksimum Fiyat')
                             ->numeric()
+                            ->minValue(0) // 0'ın altını engelle
                             ->reactive(),
                     ])
                     ->query(function ($query, array $data) {
@@ -106,7 +115,8 @@ class ProductsTable
                         if ($max !== null) {
                             $query->where('cost', '<=', $max);
                         }
-                    })
+                    }),
+
             ])
             ->recordActions([
                 EditAction::make()

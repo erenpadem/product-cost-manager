@@ -31,7 +31,7 @@ class EditProduct extends EditRecord
                 'item_id' => $item->component_id,
                 'amount' => $item->qty,
                 'unit' => $item->unit,
-                'price' => $item->component?->price_per_kg ?? 0,
+                'price' => $item->component?->price ?? 0,
                 'total_cost' => $item->component ? \App\Services\ProductService::calculateCost([
                     [
                         'type' => $item->component_type === \App\Models\RawMaterial::class ? 'raw' : 'product',
