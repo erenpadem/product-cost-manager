@@ -67,6 +67,7 @@ class OrderForm
 
                 RichEditor::make('note')
                     ->label('Not')
+                    ->disabled()
                     ->columnSpanFull(),
 
                 SpatieMediaLibraryFileUpload::make('invoice_path')

@@ -114,6 +114,7 @@ class OrderController extends Controller
         return response()->json([
             'id' => $order->id,
             'status' => $order->status,
+            'note' => $order->note,
             'date' => Carbon::parse($order->created_at)
                 ->locale('tr')
                 ->isoFormat('D MMMM YYYY HH:mm'), // Örn: 25 Temmuz 2024
