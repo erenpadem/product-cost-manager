@@ -53,7 +53,7 @@ class OrderForm
                 Select::make('status')
                     ->label('Durum')
                     ->options([
-                        'verildi' => 'Verildi',
+                        'verildi' => 'Sipariş Verildi',
                         'onaylandi' => 'Onaylandı',
                         'uretimde' => 'Üretimde',
                         'yolda' => 'Yolda',

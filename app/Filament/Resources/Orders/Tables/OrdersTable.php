@@ -8,6 +8,7 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Filament\Tables\Columns\BadgeColumn;
 
 class OrdersTable
 {
@@ -19,16 +20,25 @@ class OrdersTable
                     ->label('Kullanıcı Adı')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('status')
+                    TextColumn::make('status')
                     ->label('Durum')
                     ->badge()
+                    ->getStateUsing(fn($record) => match ($record->status) {
+                        'verildi' => 'Sipariş Verildi',
+                        'onaylandi' => 'Onaylandı',
+                        'uretimde' => 'Üretimde',
+                        'yolda' => 'Yolda',
+                        'teslim_edildi' => 'Teslim Edildi',
+                        'fatura_gonderildi' => 'Fatura Gönderildi',
+                        default => $record->status,
+                    })
                     ->colors([
-                        'primary'   => 'verildi',
-                        'success'   => 'teslim_edildi',
-                        'warning'   => 'uretimde',
-                        'info'      => 'yolda',
-                        'secondary' => 'onaylandi',
-                        'danger'    => 'fatura_gonderildi',
+                        'primary'   => fn($state) => $state === 'Sipariş Verildi',
+                        'success'   => fn($state) => $state === 'Teslim Edildi',
+                        'warning'   => fn($state) => $state === 'Üretimde',
+                        'info'      => fn($state) => $state === 'Yolda',
+                        'secondary' => fn($state) => $state === 'Onaylandı',
+                        'success'    => fn($state) => $state === 'Fatura Gönderildi',
                     ])
                     ->searchable(),
                 TextColumn::make('delivery_date')
@@ -51,15 +61,15 @@ class OrdersTable
             ])
             ->filters([
                 SelectFilter::make('status')
-                ->label('Durum')
-                ->options([
-                    'verildi'          => 'Verildi',
-                    'onaylandi'        => 'Onaylandı',
-                    'uretimde'         => 'Üretimde',
-                    'yolda'            => 'Yolda',
-                    'teslim_edildi'    => 'Teslim Edildi',
-                    'fatura_gonderildi'=> 'Fatura Gönderildi',
-                ]),
+                    ->label('Durum')
+                    ->options([
+                        'verildi'          => 'Verildi',
+                        'onaylandi'        => 'Onaylandı',
+                        'uretimde'         => 'Üretimde',
+                        'yolda'            => 'Yolda',
+                        'teslim_edildi'    => 'Teslim Edildi',
+                        'fatura_gonderildi' => 'Fatura Gönderildi',
+                    ]),
             ])
             ->recordActions([
                 EditAction::make()->label('Düzenle'),
