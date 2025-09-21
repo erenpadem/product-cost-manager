@@ -13,21 +13,22 @@ class ProductController extends Controller
     {
         $query = Product::query()
             ->where('type', 'final'); // sadece final ürünler
-
-        // Search varsa hem name hem description'da ara
-        if ($search = $request->query('search')) {
+    
+        // Search varsa hem name hem description'da ara, küçük harfe çevir
+        if ($request->has('search') && $request->search) {
+            $search = mb_strtolower($request->search, 'UTF-8'); // Türkçe karakter için mb_strtolower
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                $q->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"])
+                  ->orWhereRaw('LOWER(description) LIKE ?', ["%{$search}%"]);
             });
         }
-
-        // Infinity scroll (sayfa sayfa)
-        $products = $query->paginate(20); // sayfa başı 20
-
+    
+        // Sayfalama, page parametresi backend tarafından otomatik algılanır
+        $products = $query->paginate(20);
+    
+        // JSON dönüş, frontend paginated veriyi last_page, next_page_url vs ile alabilir
         return ProductResource::collection($products);
     }
-
     public function show(Product $product)
     {
         if ($product->type !== 'final') {
