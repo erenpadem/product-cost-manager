@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\Conversions\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
@@ -13,16 +15,30 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 class Product extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
-
+    use LogsActivity;
 
     protected $fillable = [
         'name',
+        'description',
+        'ingredients',
         'total_grams',
         'cost',
         'type',
         'image',
         'notes',
     ];
+
+    protected $casts = [
+        'ingredients' => 'array',
+    ];
+    
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll() // tüm fillable alanları loglar
+            ->useLogName('product') // log_name sütununa düşer
+            ->setDescriptionForEvent(fn (string $eventName) => "Ürün {$eventName}");
+    }
 
     public function recipeItems()
     {
@@ -72,7 +88,7 @@ class Product extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('products')->singleFile();
+        $this->addMediaCollection('products');
     }
     
     public function registerMediaConversions(?Media $media = null): void

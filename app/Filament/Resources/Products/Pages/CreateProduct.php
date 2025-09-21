@@ -12,7 +12,7 @@ class CreateProduct extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $ingredients = $data['ingredients'] ?? [];
+        $ingredients = $data['main_ingredients'] ?? [];
         $data['total_grams'] = ProductService::calculateTotalGrams($ingredients);
         $data['cost'] = ProductService::calculateCost($ingredients);
 
@@ -21,7 +21,7 @@ class CreateProduct extends CreateRecord
 
     protected function afterCreate(): void
     {
-        $ingredients = $this->data['ingredients'] ?? [];
+        $ingredients = $this->data['main_ingredients'] ?? [];
         ProductService::syncIngredients($this->record, $ingredients);
     }
 

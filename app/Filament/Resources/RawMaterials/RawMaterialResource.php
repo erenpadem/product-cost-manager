@@ -20,7 +20,7 @@ class RawMaterialResource extends Resource
 
     protected static ?string $modelLabel = 'Ham Madde';
 
-    protected static string | UnitEnum | null $navigationGroup = 'Ham Madde Yönetimi';
+    protected static string | UnitEnum | null $navigationGroup = 'Ürün Yönetimi';
     protected static ?string $pluralLabel = 'Ham Maddeler';
     protected static ?string $model = RawMaterial::class;
 

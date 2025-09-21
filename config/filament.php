@@ -1,5 +1,9 @@
 <?php
 
+use App\Filament\Resources\Products\ProductResource;
+use App\Filament\Resources\RawMaterials\RawMaterialResource;
+use App\Filament\Resources\Users\UserResource;
+
 return [
 
     /*
@@ -115,6 +119,12 @@ return [
     |
     */
 
+    // config/filament.php
+    'auth' => [
+        'guard' => 'web', // api değil web olmalı
+    ],
+
+
     'system_route_prefix' => 'filament',
 
     'panels' => [
@@ -122,7 +132,9 @@ return [
             'id' => 'admin',
             'path' => '/admin',
             'resources' => [
-                // Resource'larını buraya ekle
+                ProductResource::class,
+                UserResource::class,
+                RawMaterialResource::class,
             ],
             'default' => true,  // ⚡ Burayı ekle
         ],

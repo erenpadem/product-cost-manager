@@ -23,9 +23,10 @@ class ProductsTable
     {
         return $table
             ->columns([
-                SpatieMediaLibraryImageColumn::make(name: 'product')
-                    ->label('Görsel')
-                    ->collection('products'),
+                SpatieMediaLibraryImageColumn::make('product')
+                ->label('Görsel')
+                ->collection('products')
+                ->limit(1),
                 TextColumn::make('name')
                     ->label('Ürün Adı')
                     ->searchable()

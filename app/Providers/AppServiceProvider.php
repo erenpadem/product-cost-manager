@@ -32,7 +32,8 @@ class AppServiceProvider extends ServiceProvider
                 $panel
                     ->id('admin')
                     ->path('/admin')
-                    ->default(); // ⚡ Default panel
+                    ->default()
+                    ->authGuard('web');// ⚡ Default panel
             });
         });
     }

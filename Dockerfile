@@ -1,30 +1,38 @@
-# PHP 8.3 FPM
-FROM php:8.3-fpm
+# PHP 8.3 Alpine
+FROM php:8.3-fpm-alpine
 
-# Sistem bağımlılıkları ve PHP uzantıları
-RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    libzip-dev \
-    zip \
-    unzip \
+# Sistem bağımlılıkları
+RUN apk add --no-cache \
+    bash \
     git \
     curl \
-    libicu-dev \
-    libjpeg-dev \
+    zip \
+    unzip \
+    icu-dev \
+    libzip-dev \
     libpng-dev \
+    libjpeg-turbo-dev \
     libwebp-dev \
+    postgresql-dev \
+    oniguruma-dev \
     && docker-php-ext-configure gd \
         --with-jpeg \
         --with-webp \
-    && docker-php-ext-install pdo pdo_pgsql intl zip exif gd
+    && docker-php-ext-install \
+        pdo \
+        pdo_pgsql \
+        intl \
+        zip \
+        exif \
+        gd
 
-# Composer yükle
+# Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Çalışma dizini
 WORKDIR /var/www/html
 
-# Eğer Laravel yoksa kur
+# Laravel yoksa kur
 RUN if [ ! -f artisan ]; then composer create-project laravel/laravel ./; fi
 
 # Laravel serve

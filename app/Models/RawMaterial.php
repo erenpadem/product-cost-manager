@@ -4,11 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class RawMaterial extends Model
 {
     use HasFactory;
+    use LogsActivity;
 
+    
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll() // tüm fillable alanları loglar
+            ->useLogName('raw_material') // log_name sütununa düşer
+            ->setDescriptionForEvent(fn (string $eventName) => "Ham madde {$eventName}");
+    }
     protected $fillable = [
         'name',
         'price',

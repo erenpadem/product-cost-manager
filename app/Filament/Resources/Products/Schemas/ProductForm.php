@@ -23,6 +23,7 @@ class ProductForm
             Section::make('Ürün Görseli')->schema([
                 SpatieMediaLibraryFileUpload::make('products')
                     ->label('Ürün Görseli')
+                    ->multiple()
                     ->disk(config('filesystems.default'))  // Laravel default disk
                     ->conversionsDisk(config('filesystems.default')) // conversion dosyaları aynı diskte
                     ->acceptedFileTypes(['image/jpeg', 'image/jpg', 'image/webp'])
@@ -50,25 +51,36 @@ class ProductForm
                     ->default('final')
                     ->required(),
             ])->columnSpanFull(),
-                            
-         RichEditor::make('notes')
-           ->label('Ürün Notları')
-           
-                 ->toolbarButtons([
-                      ['bold', 'italic', 'underline', 'strike', 'subscript', 'superscript', 'link'],
-                   ['h2', 'h3', 'alignStart', 'alignCenter', 'alignEnd'],
-               ['blockquote', 'codeBlock', 'bulletList', 'orderedList'],
-                     ['table', 'attachFiles'], // The `customBlocks` and `mergeTags` tools are also added here if those features are used.
-                  ['undo', 'redo'],
-                 ])->columnSpanFull(),
-         
-                                        
+            
+            RichEditor::make('description')
+            ->label('Ürün Açıklaması')
+
+            ->toolbarButtons([
+                ['bold', 'italic', 'underline', 'strike', 'subscript', 'superscript', 'link'],
+                ['h2', 'h3', 'alignStart', 'alignCenter', 'alignEnd'],
+                ['blockquote', 'codeBlock', 'bulletList', 'orderedList'],
+                ['table', 'attachFiles'], // The `customBlocks` and `mergeTags` tools are also added here if those features are used.
+                ['undo', 'redo'],
+            ])->columnSpanFull(),
+            
+            RichEditor::make('notes')
+                ->label('Ürün Notları')
+
+                ->toolbarButtons([
+                    ['bold', 'italic', 'underline', 'strike', 'subscript', 'superscript', 'link'],
+                    ['h2', 'h3', 'alignStart', 'alignCenter', 'alignEnd'],
+                    ['blockquote', 'codeBlock', 'bulletList', 'orderedList'],
+                    ['table', 'attachFiles'], // The `customBlocks` and `mergeTags` tools are also added here if those features are used.
+                    ['undo', 'redo'],
+                ])->columnSpanFull(),
+
+
 
             Section::make('Tarif / Ham Maddeler')->schema([
-                Repeater::make('ingredients')
+                Repeater::make('main_ingredients')
                     ->label('Malzemeler')
                     ->minItems(1)
-                    ->createItemButtonLabel('Malzeme Ekle')
+                    ->addActionLabel('Malzeme Ekle')
                     ->schema([
                         Grid::make(4)->schema([
                             Select::make('type')
@@ -95,7 +107,7 @@ class ProductForm
                                 ->numeric()
                                 ->reactive()
                                 ->afterStateUpdated(function ($state, $set, $get) {
-                                    $ingredients = $get('ingredients') ?? [];
+                                    $ingredients = $get('main_ingredients') ?? [];
                                     $set('total_grams', ProductService::calculateTotalGrams($ingredients));
                                     $set('cost', ProductService::calculateCost($ingredients));
                                 })
@@ -115,6 +127,21 @@ class ProductForm
                         ]),
                     ]),
             ])->collapsible()->columnSpanFull(),
+
+            
+
+            Repeater::make('ingredients')
+            ->columnSpanFull()
+            ->label('Kullanıcının göreceği tarif (zorunlu değil)')
+                ->schema([
+                    TextInput::make('value')
+                        ->label('İçerik')
+                        ->required(),
+                ])
+                ->addActionLabel('Yeni İçerik Ekle')
+                ->nullable()
+                ->collapsed()
+                ->helperText('Bu alan sadece kullanıcının görmesi içindir.'),
 
             Section::make('Özet')->schema([
                 Grid::make(2)->schema([
